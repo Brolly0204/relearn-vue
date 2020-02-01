@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div v-loading="isLoading">{{data}}</div>
+      <button @click="update">更新</button>
+    </div>
+    <script type="text/javascript">
+      Vue.directive('loading', {
+        update(el, binding, vnode) {
+          if (binding.value) {
+            const div = document.createElement('div')
+            div.innerText = '加载中...'
+            div.id = 'loading'
+            div.style.position = 'fixed'
+            div.style.left = 0
+            div.style.top = 0
+            div.style.width = '100%'
+            div.style.height = '100%'
+            div.style.display = 'flex'
+            div.style.justifyContent = 'center'
+            div.style.alignItems = 'center'
+            div.style.color = 'white'
+            div.style.background = 'rgba(0, 0, 0, .7)'
+            document.body.appendChild(div)
+          } else {
+            const div = document.getElementById('loading')
+            div && document.body.removeChild(div)
+          }
+        }
+      })
+      // console.log(Vue.options['directives'])
+      new Vue({
+        el: '#app',
+        data() {
+          return {
+            isLoading: false,
+            data: ''
+          }
+        },
+        methods: {
+          update() {
+            this.isLoading = true
+            setTimeout(() => {
+              this.data = '用户数据'
+              this.isLoading = false
+            }, 3000)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

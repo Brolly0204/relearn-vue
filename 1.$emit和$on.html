@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js" charset="utf-8"></script>
+</head>
+<body>
+  <div id="app">
+    <button @click="boots1">触发event1</button>
+    <button @click="boots2">触发event2</button>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          message: 'hello vue'
+        }
+      },
+      created() {
+        this.$on(['my_events1', 'my_events2'], this.handleEvents)
+        console.log(this._events)
+      },
+      methods: {
+        handleEvents(e) {
+          console.log(e)
+        },
+        boots1() {
+          this.$emit('my_events1', 'events1')
+        },
+        boots2() {
+          this.$emit('my_events2', 'events2')
+        }
+      }
+    })
+  </script>
+</body>
+</html>

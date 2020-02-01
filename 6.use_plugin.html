@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #loading-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 10;
+      }
+    </style>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <button @click="loading">Loading Data</button>
+    </div>
+    <script>
+      const loadingPlugin = {
+        install(_Vue) {
+          const LoadingComponent = _Vue.extend({
+            name: 'LoadingComponent',
+            template: '<div id="loading-wrapper">{{msg}}</div>',
+            props: {
+              msg: {
+                type: String,
+                default: 'loading...'
+              }
+            }
+          })
+
+          function Loading(msg = 'loading...') {
+            const div = document.createElement('div')
+            div.id = 'loading-wrapper'
+            document.body.appendChild(div)
+            const component = new LoadingComponent({
+              props: {
+                msg: {
+                  type: String,
+                  default: msg
+                }
+              }
+            }).$mount('#loading-wrapper')
+            return () => {
+              document.body.removeChild(component.$el)
+            }
+          }
+          _Vue.prototype.$loading = Loading
+        }
+      }
+
+      Vue.use(loadingPlugin)
+
+      new Vue({
+        el: '#app',
+        methods: {
+          loading() {
+            const hide = this.$loading('正在加载，请稍等...')
+            setTimeout(() => {
+              hide()
+            }, 3000)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

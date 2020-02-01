@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <Test></Test>
+    </div>
+    <script>
+      function registerComponent() {
+        // Test Component
+        Vue.component('Test', {
+          template: '<div>{{message}}<Test2/></div>',
+          provide() {
+            return {
+              elTest: this // Test Component实例
+            }
+          },
+          data() {
+            return {
+              message: 'message from Test'
+            }
+          },
+          methods: {
+            changeMessage(component) {
+              this.message = `message from ${component}`
+            }
+          }
+        })
+
+        // Test2 Component
+        Vue.component('Test2', {
+          template: '<Test3/>'
+        })
+
+        // Test3 Component
+        Vue.component('Test3', {
+          inject: ['elTest'],
+          template: '<button @click="change">change message</button>',
+          methods: {
+            change() {
+              this.elTest.changeMessage(this.$options._componentTag)
+            }
+          }
+        })
+      }
+
+      // 注册全局组件
+      registerComponent()
+
+      new Vue({
+        el: '#app'
+      })
+    </script>
+  </body>
+</html>

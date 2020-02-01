@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h3>Watch 用法1：常见用法</h3>
+      <input type="text" v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="app2">
+      <h3>Watch 用法2：绑定方法</h3>
+      <input type="text" v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="app3">
+      <h3>Watch 用法3：deep + handler</h3>
+      <input type="text" v-model="deepMessage.a.b" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="app4">
+      <h3>Watch 用法4：immediate</h3>
+      <input type="text" v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="app5">
+      <h3>Watch 用法5：绑定多个 handler</h3>
+      <input v-model="message" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <div id="app6">
+      <h3>Watch 用法6：监听对象属性</h3>
+      <input v-model="deepMessage.a.b" />
+      <span>{{copyMessage}}</span>
+    </div>
+    <script>
+      // Watch 用法1：常见用法
+      new Vue({
+        el: '#app',
+        data: {
+          message: 'Hello Vue',
+          copyMessage: ''
+        },
+        watch: {
+          message(value) {
+            this.copyMessage = value
+          }
+        }
+      })
+
+      // Watch 用法2：绑定方法
+      new Vue({
+        el: '#app2',
+        data: {
+          message: 'Hello Vue',
+          copyMessage: ''
+        },
+        watch: {
+          message: 'handleMessage'
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value
+          }
+        }
+      })
+
+      // Watch 用法3：deep + handler
+      new Vue({
+        el: '#app3',
+        data: {
+          deepMessage: {
+            a: {
+              b: 'Deep Message'
+            }
+          },
+          copyMessage: ''
+        },
+        watch: {
+          deepMessage: {
+            handler: 'handleDeepMessage',
+            deep: true
+          }
+        },
+        methods: {
+          handleDeepMessage(deepValue) {
+            this.copyMessage = deepValue.a.b
+          }
+        }
+      })
+
+      // Watch 用法4：immediate
+      new Vue({
+        el: '#app4',
+        data: {
+          message: 'Hello Vue',
+          copyMessage: ''
+        },
+        watch: {
+          message: {
+            handler: 'handleMessage',
+            immediate: true
+          }
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value
+          }
+        }
+      })
+
+      // Watch 用法5：绑定多个 handler
+      new Vue({
+        el: '#app5',
+        data: {
+          message: 'Hello Vue',
+          copyMessage: ''
+        },
+        watch: {
+          message: [
+            {
+              handler: 'handleMessage'
+            },
+            'handleMessage2',
+            function(value) {
+              this.copyMessage = this.copyMessage + '...'
+            }
+          ]
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value + ' '
+          },
+          handleMessage2(value) {
+            this.copyMessage = this.copyMessage + '$$'
+          }
+        }
+      })
+
+      // Watch 用法6：监听对象属性
+      new Vue({
+        el: '#app6',
+        data: {
+          deepMessage: {
+            a: {
+              b: 'Hello Vue'
+            }
+          },
+          copyMessage: ''
+        },
+        watch: {
+          'deepMessage.a.b': 'handleMessage'
+          // 'deepMessage.a.b'(value) {
+          //   this.copyMessage = value
+          // }
+        },
+        methods: {
+          handleMessage(value) {
+            this.copyMessage = value
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
