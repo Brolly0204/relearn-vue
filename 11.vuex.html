@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">{{data}}</div>
+    <div id="app2">{{data2}}</div>
+    <div id="app3">
+      <button @click="change">change</button>
+    </div>
+    <script>
+      function registerPlugin(Vue) {
+        const vuex = {}
+        vuex._vm = new Vue({
+          data: {
+            message: 'Hello vue.js'
+          }
+        })
+        vuex.state = vuex._vm
+        vuex.mutations = {
+          setMessage(value) {
+            vuex.state.message = value
+          }
+        }
+
+        function init() {
+          this.$store = vuex
+        }
+
+        Vue.mixin({
+          beforeCreate: init
+        })
+      }
+      Vue.use(registerPlugin)
+      // app
+      new Vue({
+        el: '#app',
+        computed: {
+          data() {
+            return this.$store.state.message
+          }
+        }
+      })
+
+      // app2
+      new Vue({
+        el: '#app2',
+        computed: {
+          data2() {
+            return this.$store.state.message
+          }
+        }
+      })
+
+      // app3
+      new Vue({
+        el: '#app3',
+        methods: {
+          change() {
+            const value = this.$store.state.message + '.'
+            this.$store.mutations.setMessage(value)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

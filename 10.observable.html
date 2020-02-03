@@ -8,22 +8,23 @@
     <script src="./node_modules/vue/dist/vue.js"></script>
   </head>
   <body>
-    <div id="app">
-      <test :message="message" />
-    </div>
+    <div id="app"></div>
     <script>
-      const component = Vue.extend({
-        props: {
-          message: String,
-          default: 'default message'
-        },
-        template: '<div>{{message}}</div>'
-      })
-      Vue.component('Test', component)
+      const state = Vue.observable({ count: 0 })
       new Vue({
         el: '#app',
-        data: {
-          message: 'Test Component'
+        render(h) {
+          return h(
+            'div',
+            {
+              on: {
+                click: () => {
+                  state.count++
+                }
+              }
+            },
+            `count is: ${state.count}`
+          )
         }
       })
     </script>
